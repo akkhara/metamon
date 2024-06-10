@@ -5,7 +5,7 @@ const os = require('os');
 const date = require('date-and-time');
 cron.schedule('30 8,20 * * *', function() {
   const now  =  new Date();
-  console.log(`daily check ${date.format(now,'YYYY/MM/DD HH:mm:ss')}`);
+  console.log(`daily check ${date.format(now,'YYYY-MM-DD HH:mm:ss')}`);
   exec('/usr/local/go/bin/pandocli query status', (error, stdout, stderr) => {
     if (error) {
       lineNotify.notify({
@@ -21,10 +21,7 @@ cron.schedule('30 8,20 * * *', function() {
       var status = JSON.parse(stdout);
       var dt = new Date(status.latest_finalized_block_time * 1000);
       const timestamp = Date.now() / 1000;
-      var msg = `${os.hostname()}
-latest finalized block: ${status.latest_finalized_block_height}
-latest finalized time: ${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}
-syncing: ${status.syncing}`;
+      var msg = `${os.hostname()}\nlatest finalized block: ${status.latest_finalized_block_height}\nlatest finalized time: ${date.format(dt,'YYYY-MM-DD HH:mm:ss')}\nsyncing: ${status.syncing}`;
       lineNotify.notify({
         message: msg
       });
@@ -34,7 +31,7 @@ syncing: ${status.syncing}`;
 });
 cron.schedule('0 * * * *', function() {
   const now  =  new Date();
-  console.log(`hourly check ${date.format(now,'YYYY/MM/DD HH:mm:ss')}`);
+  console.log(`hourly check ${date.format(now,'YYYY-MM-DD HH:mm:ss')}`);
   exec('/usr/local/go/bin/pandocli query status', (error, stdout, stderr) => {
     if (error) {
       lineNotify.notify({
@@ -51,7 +48,7 @@ cron.schedule('0 * * * *', function() {
       const timestamp = Date.now() / 1000;
       if (timestamp - status.latest_finalized_block_time >= 300) {
         var dt = new Date(status.latest_finalized_block_time * 1000);
-        var msg = `${os.hostname()}\nStoped syncing since: ${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+        var msg = `${os.hostname()}\nStoped syncing since: ${date.format(dt,'YYYY-MM-DD HH:mm:ss')}`;
         lineNotify.notify({
           message: msg
         });
