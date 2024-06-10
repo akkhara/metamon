@@ -2,8 +2,10 @@ const cron = require('node-cron');
 const {exec} = require('child_process');
 const lineNotify = require('line-notify-nodejs')('bc9ZH7slbMEnQ5mTQ8MKFetKF7oxVNr10HP8rHyvlIY');
 const os = require('os');
+const date = require('date-and-time');
 cron.schedule('30 8,20 * * *', function() {
-  console.log('daily check');
+  const now  =  new Date();
+  console.log(`daily check ${date.format(now,'YYYY/MM/DD HH:mm:ss')}`);
   exec('/usr/local/go/bin/pandocli query status', (error, stdout, stderr) => {
     if (error) {
       lineNotify.notify({
@@ -31,7 +33,8 @@ syncing: ${status.syncing}`;
   });
 });
 cron.schedule('0 * * * *', function() {
-  console.log('hourly check');
+  const now  =  new Date();
+  console.log(`hourly check ${date.format(now,'YYYY/MM/DD HH:mm:ss')}`);
   exec('/usr/local/go/bin/pandocli query status', (error, stdout, stderr) => {
     if (error) {
       lineNotify.notify({

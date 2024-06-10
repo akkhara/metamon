@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "date-and-time": "^3.3.0",
     "line-notify-nodejs": "^1.0.1",
     "node-cron": "^3.0.3"
   }
