@@ -27,9 +27,9 @@ cron.schedule('30 8,20 * * *', function() {
       var dt = new Date(status.latest_finalized_block_time * 1000);
       const timestamp = Date.now() / 1000;
       var msg = `${os.hostname()}\nlatest finalized block: ${status.latest_finalized_block_height}\nlatest finalized time: ${date.format(dt,'YYYY-MM-DD HH:mm:ss')}\nsyncing: ${status.syncing}`;
-      lineNotify.notify({
+      /*lineNotify.notify({
         message: msg
-      });
+      });*/
       console.log(msg);
     }
   });
