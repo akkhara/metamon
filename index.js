@@ -46,8 +46,13 @@ cron.schedule('0 * * * *', function() {
     } else {
       var status = JSON.parse(stdout);
       const timestamp = Date.now() / 1000;
-      if (timestamp - status.latest_finalized_block_time >= 300) {
-        var dt = new Date(status.latest_finalized_block_time * 1000);
+      var dt = new Date(status.latest_finalized_block_time * 1000);
+      if (status.syncing) {
+        var msg = `${os.hostname()}\nlatest finalized block: ${status.latest_finalized_block_height}\nlatest finalized time: ${date.format(dt,'YYYY-MM-DD HH:mm:ss')}\nsyncing: ${status.syncing}`;
+        lineNotify.notify({
+          message: msg
+        });
+      } else if (timestamp - status.latest_finalized_block_time >= 300) {
         var msg = `${os.hostname()}\nStoped syncing since: ${date.format(dt,'YYYY-MM-DD HH:mm:ss')}`;
         lineNotify.notify({
           message: msg
