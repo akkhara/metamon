@@ -1,8 +1,13 @@
+const express = require('express');
+const http = require('http');
 const cron = require('node-cron');
 const {exec} = require('child_process');
 const lineNotify = require('line-notify-nodejs')('bc9ZH7slbMEnQ5mTQ8MKFetKF7oxVNr10HP8rHyvlIY');
 const os = require('os');
 const date = require('date-and-time');
+
+const app = express();
+
 cron.schedule('30 8,20 * * *', function() {
   const now  =  new Date();
   console.log(`daily check ${date.format(now,'YYYY-MM-DD HH:mm:ss')}`);
@@ -62,4 +67,20 @@ cron.schedule('0 * * * *', function() {
       }
     }
   });
+});
+
+app.get('/status', (req, res) => {
+  exec('/usr/local/go/bin/pandocli query status', (error, stdout, stderr) => {
+    if (error) {
+      res.send(error.message);
+    } else if (stderr) {
+      res.send(stderr);
+    } else {
+      res.send(stdout);
+    }
+  });
+});
+
+http.createServer(app).listen(8080, () => {
+  console.log('HTTP Server running on port 80');
 });
