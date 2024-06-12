@@ -82,5 +82,5 @@ app.get('/status', (req, res) => {
 });
 
 http.createServer(app).listen(8080, () => {
-  console.log('HTTP Server running on port 80');
+  console.log('HTTP Server running on port 8080');
 });
